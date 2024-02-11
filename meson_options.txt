@@ -1,0 +1,2 @@
+option('docs', type: 'feature', value: 'disabled')
+option('fep', type: 'feature', value: 'disabled')
