@@ -23,15 +23,28 @@ libskk_sources = files(
   'keysyms.vala'
 )
 
-libskk = static_library(
+libskk = library(
   'skk',
+  version: '1.0.5',
+  soversion: '1',
   sources: libskk_sources,
   dependencies: libskk_deps,
   vala_header: 'libskk.h',
-  vala_vapi: 'libskk-1.0.vapi',
+  vala_vapi: 'skk-1.0.vapi',
+  vala_gir: 'Skk-1.0.gir',
   include_directories: include_directories('..'), # for config.h
   install: true,
-  install_dir: get_option('libdir') / 'libskk-1.0'
+  install_dir: [true, true, true, true]
+)
+
+gir_compiler = find_program('g-ir-compiler')
+custom_target(
+  'libskk typelib',
+  command: [gir_compiler, '--output', '@OUTPUT@', meson.current_build_dir() / 'Skk-1.0.gir'],
+  output: 'Skk-1.0.typelib',
+  depends: libskk,
+  install: true,
+  install_dir: get_option('libdir') / 'girepository-1.0'
 )
 
 pkgconfig.generate(

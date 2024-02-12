@@ -2,7 +2,8 @@ project(
   'libskk', ['c', 'vala'],
   version: '1.0.5',
   license: 'GPL-3.0-or-later',
-  meson_version: '>= 0.64.0'
+  meson_version: '>= 0.64.0',
+  default_options: ['default_library=static']
 )
 
 vapi_dir = meson.current_source_dir() / 'libskk'
