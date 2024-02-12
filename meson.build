@@ -41,3 +41,28 @@ subdir('tools')
 subdir('po')
 subdir('tests')
 install_subdir('rules', install_dir: libskk_pkgdatadir)
+
+if get_option('docs')
+  # Usage: meson compile valadoc -C builddir/
+  valadoc = find_program('valadoc')
+  run_target(
+    'valadoc',
+    command: [
+      valadoc,
+      '--directory', join_paths(meson.current_source_dir(), 'docs', 'valadoc'),
+      '--package-name', 'libskk',
+      '--basedir', meson.current_source_dir() / 'libskk',
+      '--vapidir', vapi_dir,
+      join_paths(meson.current_build_dir(), 'libskk', 'skk-1.0.vapi')
+    ],
+    depends: libskk
+  )
+
+  # TODO
+  # gi_docgen = find_program('gi-docgen')
+  # run_target(
+  #   'gi-docgen',
+  #   command: [gi_docgen],
+  #   depends: libskk
+  # )
+endif

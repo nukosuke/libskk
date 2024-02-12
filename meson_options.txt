@@ -1,2 +1,2 @@
-option('docs', type: 'feature', value: 'disabled')
-option('fep', type: 'feature', value: 'disabled')
+option('docs', type: 'boolean', value: false)
+option('fep', type: 'boolean', value: false)

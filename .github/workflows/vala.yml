@@ -15,8 +15,24 @@ jobs:
       with:
         python-version: 3.x
     - run: pip install meson ninja gi-docgen
-    - run: sudo apt-get install -y valac valadoc gobject-introspection libgee-0.8-dev libgio2.0-cil-dev libjson-glib-dev libxkbcommon-dev
-    - run: meson setup builddir/
+    - name: Install build dependencies
+      run: |
+        sudo apt-get install -y \
+          valac \
+          valadoc \
+          gobject-introspection \
+          libgee-0.8-dev \
+          libgio2.0-cil-dev \
+          libjson-glib-dev \
+          libxkbcommon-dev
+    - run: meson setup builddir/ -Ddocs=true
       env:
         CC: gcc
     - run: meson test -C builddir/ -v
+    - run: meson compile valadoc -C builddir
+    - name: Publish docs
+      uses: peaceiris/actions-gh-pages@v3
+      if: ${{ github.ref == 'refs/heads/master' }}
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs
