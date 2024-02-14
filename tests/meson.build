@@ -16,7 +16,24 @@ tests_env = environment({
     meson.current_source_dir()
   ])
 })
+
 add_test_setup('default', env: tests_env, is_default: true)
+
+valgrind = find_program('valgrind', required: false)
+if valgrind.found()
+  add_test_setup(
+    'valgrind',
+    env: tests_env,
+    exe_wrapper: [
+      valgrind,
+      '--show-reachable=no',
+      '--gen-suppressions=all',
+      '--num-callers=20',
+      '--error-exitcode=0',
+      '--log-file=valgrind.log.%p'
+    ]
+  )
+endif
 
 tests_file_dict = meson.current_source_dir() / 'file-dict.dat'
 tests_cdb_dict = meson.current_source_dir() / 'cdb-dict.dat'
