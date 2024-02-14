@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: 3.x
+    - run: pip install meson ninja gi-docgen
+    - name: Install build dependencies
+      run: |
+        sudo apt-get install -y \
+          valac \
+          valadoc \
+          valgrind \
+          gobject-introspection \
+          libgirepository1.0-dev \
+          libgee-0.8-dev \
+          libgio2.0-cil-dev \
+          libjson-glib-dev \
+          libxkbcommon-dev
+    - run: meson setup builddir/ -Ddocs=true
+      env:
+        CC: gcc
+    - run: meson test -C builddir/ --setup valgrind -v
+    - run: meson compile valadoc -C builddir
+    - run: meson compile gi-docgen -C builddir
+    - name: Publish docs
+      uses: peaceiris/actions-gh-pages@v3
+      if: ${{ github.ref == 'refs/heads/master' }}
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs

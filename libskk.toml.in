@@ -1,0 +1,14 @@
+[library]
+name = "libskk"
+version = "@VERSION@"
+browse_url = "https://github.com/ueno/libskk"
+repository_url = "https://github.com/ueno/libskk.git"
+website_url = "https://github.com/ueno/libskk"
+authors = "Daiki Ueno"
+license = "@LICENSE@"
+search_index = true
+
+[theme]
+name = "basic"
+show_index_summary = true
+show_class_hierarchy = true
