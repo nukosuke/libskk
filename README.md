@@ -1,6 +1,6 @@
 libskk -- a library to deal with Japanese kana-to-kanji conversion method
 ======
-[![CI](https://github.com/nukosuke/libskk/actions/workflows/vala.yml/badge.svg)](https://github.com/nukosuke/libskk/actions/workflows/vala.yml)
+[![CI](https://github.com/ueno/libskk/actions/workflows/vala.yml/badge.svg)](https://github.com/ueno/libskk/actions/workflows/vala.yml)
 [![Coverage Status](https://img.shields.io/coveralls/ueno/libskk.svg)](https://coveralls.io/r/ueno/libskk)
 
 Features
