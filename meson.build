@@ -77,6 +77,7 @@ if get_option('docs')
       command: [
         gi_docgen,
         'generate',
+        '--quiet',
         '--config', gi_docgen_conf,
         '--output-dir', meson.current_source_dir() / 'docs' / 'gi-docgen',
         meson.current_build_dir() / 'libskk' / 'Skk-1.0.gir'

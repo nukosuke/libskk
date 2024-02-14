@@ -20,7 +20,9 @@ jobs:
         sudo apt-get install -y \
           valac \
           valadoc \
+          valgrind \
           gobject-introspection \
+          libgirepository1.0-dev \
           libgee-0.8-dev \
           libgio2.0-cil-dev \
           libjson-glib-dev \
@@ -28,8 +30,9 @@ jobs:
     - run: meson setup builddir/ -Ddocs=true
       env:
         CC: gcc
-    - run: meson test -C builddir/ -v
+    - run: meson test -C builddir/ --setup valgrind -v
     - run: meson compile valadoc -C builddir
+    - run: meson compile gi-docgen -C builddir
     - name: Publish docs
       uses: peaceiris/actions-gh-pages@v3
       if: ${{ github.ref == 'refs/heads/master' }}
