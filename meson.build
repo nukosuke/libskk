@@ -44,25 +44,44 @@ install_subdir('rules', install_dir: libskk_pkgdatadir)
 
 if get_option('docs')
   # Usage: meson compile valadoc -C builddir/
-  valadoc = find_program('valadoc')
-  run_target(
-    'valadoc',
-    command: [
-      valadoc,
-      '--directory', join_paths(meson.current_source_dir(), 'docs', 'valadoc'),
-      '--package-name', 'libskk',
-      '--basedir', meson.current_source_dir() / 'libskk',
-      '--vapidir', vapi_dir,
-      join_paths(meson.current_build_dir(), 'libskk', 'skk-1.0.vapi')
-    ],
-    depends: libskk
-  )
+  valadoc = find_program('valadoc', required: false)
+  if valadoc.found()
+    run_target(
+      'valadoc',
+      command: [
+        valadoc,
+        '--directory', meson.current_source_dir() / 'docs' / 'valadoc',
+        '--package-name', 'libskk',
+        '--basedir', meson.current_source_dir() / 'libskk',
+        '--vapidir', vapi_dir,
+        join_paths(meson.current_build_dir(), 'libskk', 'skk-1.0.vapi')
+      ],
+      depends: libskk
+    )
+  endif
 
-  # TODO
-  # gi_docgen = find_program('gi-docgen')
-  # run_target(
-  #   'gi-docgen',
-  #   command: [gi_docgen],
-  #   depends: libskk
-  # )
+  # Usage: meson compile gi-docgen -C builddir/
+  gi_docgen = find_program('gi-docgen', required: false)
+  if gi_docgen.found()
+    gi_docgen_conf = configure_file(
+      input: 'libskk.toml.in',
+      output: 'libskk.toml',
+      configuration: configuration_data({
+        'VERSION': meson.project_version(),
+        'LICENSE': '/'.join(meson.project_license())
+      })
+    )
+
+    run_target(
+      'gi-docgen',
+      command: [
+        gi_docgen,
+        'generate',
+        '--config', gi_docgen_conf,
+        '--output-dir', meson.current_source_dir() / 'docs' / 'gi-docgen',
+        meson.current_build_dir() / 'libskk' / 'Skk-1.0.gir'
+      ],
+      depends: libskk
+    )
+  endif
 endif
